@@ -1,0 +1,23 @@
+.basket_block {
+    width: 30px;
+    margin-right: 22px;
+}
+
+.basket_icon {
+    margin-top: 10px;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+}
+
+.basket_text {
+    margin-bottom: 0px;
+    margin-top: 8px;
+    font-size: 15px;
+}
+
+.text_img_block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
