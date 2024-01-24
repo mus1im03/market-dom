@@ -1,36 +1,55 @@
-import React, { useRef } from 'react';
-import './MainBaner.css'
-import slide1 from '../assets/img/venecshtukaturka.png'
-import slide2 from '../assets/img/energyinstruments.png'
+import React from "react";
+import "./MainBaner.css";
+import slide1 from "../assets/img/venecshtukaturka.png";
+import slide2 from "../assets/img/energyinstruments.png";
+import Flickity from "react-flickity-component";
+
 
 const MainBaner = () => {
+  
+  const flickityOptions = {
+    initialIndex: 1,
+    wrapAround: true,
+    autoPlay: 3000,
+  };
 
-    let imageContainerRef = useRef(null)
+  const films = {
+    id: [1, 2],
+    image: [slide1, slide2],
+  };
 
-    const images = [slide1, slide2]
-
-    const prev = () => imageContainerRef.current.scrollLeft -= 700
-
-    const next = () => imageContainerRef.current.scrollLeft += 700
-
-    return (
-      <>
-        <div className='page-container'>
-          <div className='content'>
-              <div className='prev' onClick={prev}></div>
-              <div className='slide-panel' ref={imageContainerRef}>
-                  {images.map(image => {return  (<img src={image} />)})}
-              </div>
-              <div className='next' onClick={next}></div>
-          </div>
-        </div>
-
-        {/* <Routes>
-          <Route path="/category/:categoryId" element={<Products />} />
-          <Route path="/itemcategory/:itemCategoryId" element={<Products />} />
-        </Routes> */}
-      </>
-    );
+  return (
+    <div className="App">
+      <Flickity
+        className="Slider"
+        elementType="div"
+        disableImagesLoaded={false}
+        options={flickityOptions}
+        reloadOnUpdate
+        static
+      >
+        {films["id"].map((index) => {
+          return (
+            <div key={index} className="Plate">
+              <>
+                {/* <div className="imageTitle">{films["title"][index - 1]}</div> */}
+                <div
+                  style={{
+                    backgroundImage: `url(${films["image"][index - 1]})`,
+                    width: "100%",
+                    height: 400,
+                    backgroundSize: "cover",
+                    borderRadius: "0px",
+                  }}
+                  className="firstImg"
+                ></div>
+              </>
+            </div>
+          );
+        })}
+      </Flickity>
+    </div>
+  );
 };
 
 export default MainBaner;

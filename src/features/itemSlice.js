@@ -23,11 +23,6 @@ export const fetchItems = createAsyncThunk(
   }
 );
 
-export const addCart = createAction("addToCart");
-export const removeCart = createAction("removeCart");
-export const plus = createAction("plus");
-export const minus = createAction("minus");
-
 const itemsSlice = createSlice({
   name: "items",
   initialState,

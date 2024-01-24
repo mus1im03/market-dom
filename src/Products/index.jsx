@@ -7,35 +7,32 @@ import { fetchItems } from "../features/itemSlice";
 
 const Products = () => {
 
-  const { itemCategoryId } = useParams(); // получаем id из роута
-  const { categoryId } = useParams(); // получаем id из роута
-
-  console.log("itemCategoryId", itemCategoryId, "categoryId", categoryId);
+  const { itemCategoryId } = useParams();
+  
+  const { categoryId } = useParams();
 
   const dispatch = useDispatch();
 
+  
+  const items = useSelector((state) =>
+  state.items.items.filter((item) => {
+    if (!categoryId && !itemCategoryId) return true;
+    
+    if(itemCategoryId) {
+      return item.itemCategoryId === itemCategoryId
+    }
+    
+    return item.categoryId === categoryId;
+  })
+  );
+  
   useEffect(() => {
     dispatch(fetchItems());
   }, [dispatch]);
 
-  const items = useSelector((state) =>
-    state.items.items.filter((item) => {
-      if (!categoryId && !itemCategoryId) return true;
-
-      if(itemCategoryId) {
-        return item.itemCategoryId === itemCategoryId
-      }
-
-      return item.categoryId === categoryId;
-    })
-  );
-
-  console.log(items);
-
   return (
     <div className={styles.products}>
       {items.map((item) => {
-        console.log(item);
         return (
           <Product
             key={item._id}
@@ -43,12 +40,11 @@ const Products = () => {
             name={item.title}
             price={item.price}
             left={item.left}
-            id={item.id}
+            id={item._id}
             description={item.description}
             inStok={item.inStok}
           />
         );
-        
       })}
     </div>
   );

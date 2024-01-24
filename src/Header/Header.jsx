@@ -1,30 +1,32 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import SignIn from "../pages/SignIn/SignIn";
 import SignUp from "../pages/SignUp/SignUp";
 import Sidebar from "../Sidebar/Sidebar";
 import styles from "./Header.module.css";
 import logo from "../assets/img/stroy-logo.png";
 import Basket from "../Basket/Basket";
+import { fetchItems } from "../features/itemSlice";
+import logo2 from "../assets/img/market-dom2.png";
+import basketIcon from "../assets/img/free-icon-shopping-cart-711897.png";
 
-const Header = ({value, onChange}) => {
+const Header = () => {
+  const dispatch = useDispatch();
 
-  const allItems = useSelector((state) => state.items.items);
+  const items = useSelector((state) => state.items.items);
   const token = useSelector((state) => state.application.token);
+  // const cartItems = useSelector((state) => state.cartSlice.items);
 
-  const [textSearch, setTextSearch] = useState("");
-  const [filteredItems, setFilteredItems] = useState(allItems);
+  const [value, setValue] = useState("");
 
-  const handleSearchChange = (event) => {
-    const searchText = event.target.value;
-    setTextSearch(searchText);
+  const filtered = items.filter((item) => {
+    return item.title.toLowerCase().includes(value.toLowerCase());
+  });
 
-    const filtered = allItems.filter(item =>
-      item.title.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredItems(filtered);
-  };
+  // useEffect(() => {
+  //   dispatch(fetchItems());
+  // }, []);
 
   return (
     <>
@@ -38,45 +40,40 @@ const Header = ({value, onChange}) => {
           </div>
           <div className={styles.search_catalog}>
             <input
-              value={value}
-              onChange={onChange}
               type="text"
               className={styles.search_catalog_input}
               placeholder="Я ищу..."
+              onChange={(e) => setValue(e.target.value)}
             />
-            <button className={styles.search_catalog_btn}></button>
           </div>
           <div className={styles.nav_bar}>
-            <Basket />
-          </div>
-          {!token ? (
-            <>
-              <div>
-                <Link to="/auth">SignUp</Link>
-                <Link to="/login">Login</Link>
+            <Link to="/cart">
+              <div className={styles.text_img_block}>
+                <img
+                  src={basketIcon}
+                  alt="icon"
+                  className={styles.basket_icon}
+                />
+                <p className={styles.basket_text}>Корзина</p>
               </div>
-            </>
-          ) : (
-            <>
-              <Routes>
-                <Route path="/" />
-                <Route path="/login" element={<Navigate to="/" />} />
-              </Routes>
-            </>
-          )}
+              {/* <span className={styles.items_length}>{cartItems.length > 0 && cartItems.length}</span> */}
+            </Link>
+          </div>
         </div>
       </header>
-
-      {/* {filteredItems.map(item => (
-          <div key={item._id}>{item.title}</div>
-        ))} */}
-      
-      <Routes>
-        <Route path="/auth" element={<SignUp />} />
-        <Route path="/login" element={<SignIn />} />
-      </Routes>
-      
-        
+      <ul className={styles.item_list}>
+        {value &&
+          filtered.map((item) => (
+            <Link
+              to={`/products/${item._id}`}
+              key={item._id}
+              className={styles.link}
+            >
+              <span className={styles.lupa}></span>
+              <li className={styles.item_li}>{item.title}</li>
+            </Link>
+          ))}
+      </ul>
     </>
   );
 };
